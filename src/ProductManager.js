@@ -1,18 +1,12 @@
 import {promises as fs} from 'fs' //importo solamente promesas  
 import path from 'path';
-class ProductManager{
-   constructor(){
-        this.path = this.path //mediante el path hago todas las operaciones del txt
+export class ProductManager {
+   constructor(path){
+        this.path = path //mediante el path hago todas las operaciones del txt
         this.products = [];
-        this.incrementId = 1
-     try {
-      const data = fs.readFile(this.path)
-      this.products = JSON.parse(data)
-      this.incrementId = this.incrementId()
-    } catch (error) {
-      console.error(`Can not read File ${this.path}: ${error}`);
-    }
-  } 
+        this.incrementId = 1;
+
+  }   
 
   static incrementId() {
     if (this.incrementId) {
@@ -31,52 +25,64 @@ saveProducts(){
   }
 }   
 //poner el await en el addproduct y modificar para que ande bien el id
-async addProduct (title, description, price, thumbnail, code, stock) {
+addProduct (title, description, price, thumbnail, code, stock) {
 // valido que todos los campos sean obligatorios
-if (!title || !description || !price || !thumbnail || !code || !stock ) {
-  console.error(`All fields are required`);
-  return;
-}
+    if (!title || !description || !price || !thumbnail || !code || !stock ) {
+         console.error(`All fields are required`);
+     return; 
+     }
 //validar que el campo "code" no se repita
-const productExists = this.products.some(product => product.code === code)
-    if (productExists) {
-     console.error(`the product ${code} already exists`);
-     return;
-     } 
+      const productExists = this.products.some(product => product.code === code)
+             if (productExists) {
+                  console.error(`the product ${code} already exists`);
+              return;
+           } 
     
- const newProduct = {
-      id: this.incrementId++, 
-      title,
-      description,
-      thumbnail,
-      code, 
-      stock
-     };
-     this.products.push(newProduct)
-     this.saveProducts();
-     console.log("The product was added successfully")
+      const newProduct = {
+            id: this.incrementId++, 
+             title,
+            description,
+            thumbnail,
+            code, 
+            stock
+        };
+        this.products.push(newProduct)
+        this.saveProducts();
+        console.log("The product was added successfully")
       
     }
     
     //getProduct debe devolver un arreglo vacio
-   async getProducts(){
+    async getProducts(){
         //consulto el array del txt 
-     return this.products
+        try {
+            const data = await fs.readFile(this.path,"utf-8");
+            console.log(data);
+            this.products = JSON.stringify(data)
+            // this.incrementId = this.incrementId()
+            return this.products
+           } catch (error) {
+             console.error(`Can not read File ${this.path}: ${error}`);
+           }
+     //return this.products
     }
 
-   async getProductById(id){
+   async  getProductById(id){
     //conversion 
      const prodsJSON =  await fs.readFile(this.path, 'utf-8')
-     const prods = JSON.parse(prodsJSON)
-     const product = this.products.find(producto => producto.id == id);
+     console.log(prodsJSON);
+     const prods = JSON.parse(prodsJSON);
+     //console.log(prods);
+     const product = prods.find(p => p.id == id);
      if (!product) {
       console.error(`Product id not found ${id}`);
-    }
+      }else{
       return product;
+      }
     }
 
 
-    async updateProduct (id, updateData){
+   updateProduct (id, updateData){
      const productIndex = this.products.findIndex(product=> product.id === id)
      {
       if(productIndex === -1){
@@ -100,44 +106,46 @@ const productExists = this.products.some(product => product.code === code)
     this.saveProducts();
     console.log(`product id  ${id} successfully delated `)
     }
+
+  
   }
   
   
   
 
 
-const product = new ProductManager('./products.json') //inserte la ruta al archivo txt, esta me permite guardar y ejecutar mis archivos
+// const product = new ProductManager('./products.json') //inserte la ruta al archivo txt, esta me permite guardar y ejecutar mis archivos
 
-product.getProduct().then(prods => console.log(prods))
+// product.getProduct().then(prods => console.log(prods))
 
- ProductManager.addProduct( 
-    "Remera",
-    "Remera de algodon",
-    1000,
-    "https://d3ugyf2ht6aenh.cloudfront.net/stores/188/770/products/remera-negra-remera-hombre-remera-basica-21-6952776c38b5e6844216537450098865-640-0.webp",
-     10
+//  ProductManager.addProduct( 
+//     "Remera",
+//     "Remera de algodon",
+//     1000,
+//     "https://d3ugyf2ht6aenh.cloudfront.net/stores/188/770/products/remera-negra-remera-hombre-remera-basica-21-6952776c38b5e6844216537450098865-640-0.webp",
+//      10
  
- );
+//  );
 
-ProductManager.addProduct(
-  "camisa",
-  "camisa larga",
-  2000,
-  "https://http2.mlstatic.com/D_NQ_NP_852996-MLA53168359304_012023-W.jpg",
-  14
-)
-ProductManager.addProduct(
-  "pantalon",
-  "pantalon de jean",
-   3000,
-  "https://http2.mlstatic.com/D_NQ_NP_637588-MLA49328528400_032022-W.jpg",
-   20
-  )
+// ProductManager.addProduct(
+//   "camisa",
+//   "camisa larga",
+//   2000,
+//   "https://http2.mlstatic.com/D_NQ_NP_852996-MLA53168359304_012023-W.jpg",
+//   14
+// )
+// ProductManager.addProduct(
+//   "pantalon",
+//   "pantalon de jean",
+//    3000,
+//   "https://http2.mlstatic.com/D_NQ_NP_637588-MLA49328528400_032022-W.jpg",
+//    20
+//   )
 
-//actualizar un producto pasando el ID y luego un obj con el nuevo stock
-ProductManager.updateProduct(8, {stock: 8});
+// //actualizar un producto pasando el ID y luego un obj con el nuevo stock
+// ProductManager.updateProduct(8, {stock: 8});
 
-//productManager.deleteProduct(2);
+// //productManager.deleteProduct(2);
 
 
 
