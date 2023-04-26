@@ -1,5 +1,5 @@
 import {promises as fs} from 'fs' //importo solamente promesas  
-import path from 'path';
+
 export class ProductManager {
    constructor(path){
         this.path = path //mediante el path hago todas las operaciones del txt
@@ -114,38 +114,7 @@ addProduct (title, description, price, thumbnail, code, stock) {
   
 
 
-// const product = new ProductManager('./products.json') //inserte la ruta al archivo txt, esta me permite guardar y ejecutar mis archivos
 
-// product.getProduct().then(prods => console.log(prods))
-
-//  ProductManager.addProduct( 
-//     "Remera",
-//     "Remera de algodon",
-//     1000,
-//     "https://d3ugyf2ht6aenh.cloudfront.net/stores/188/770/products/remera-negra-remera-hombre-remera-basica-21-6952776c38b5e6844216537450098865-640-0.webp",
-//      10
- 
-//  );
-
-// ProductManager.addProduct(
-//   "camisa",
-//   "camisa larga",
-//   2000,
-//   "https://http2.mlstatic.com/D_NQ_NP_852996-MLA53168359304_012023-W.jpg",
-//   14
-// )
-// ProductManager.addProduct(
-//   "pantalon",
-//   "pantalon de jean",
-//    3000,
-//   "https://http2.mlstatic.com/D_NQ_NP_637588-MLA49328528400_032022-W.jpg",
-//    20
-//   )
-
-// //actualizar un producto pasando el ID y luego un obj con el nuevo stock
-// ProductManager.updateProduct(8, {stock: 8});
-
-// //productManager.deleteProduct(2);
 
 
 
