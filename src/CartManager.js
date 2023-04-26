@@ -54,7 +54,17 @@ export class CartManager {
       }else{
       return product;
       }
+      //encontrar el array del carrito modificado 
+      const cartIndex = carts.findIndex(cart => cart.id === parseInt(idCart))
+      //actualizar el array con el objeto modificado
+      carts[cartIndex] = carrito
+      //Guardar el carrito actualizado
+      const updatedCartsJSON = JSON.stringify(carts)
+      await fs.writeFile(this.path, updatedCartsJSON, 'utf-8')
     }
+
+   
+
 //elimina los productos por id
     delateProduct(id){
         const productIndex =this.products.findIndex(product => product.id === id);
