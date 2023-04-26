@@ -5,7 +5,17 @@ export class CartManager {
          this.incrementId = 1;
  
    }  
-
+   async createCarrito() {
+    const cartsJSON = await fs.readFile(this.path, 'utf-8')
+    const carts = JSON.parse(cartsJSON)
+    const carrito = {
+        id: CartManager.incrementarID(),
+        cantidad: []
+    }
+    carts.push(carrito)
+    await fs.writeFile(this.path, JSON.stringify(carts))
+    return "Carrito creado"
+}
    //id del producto
    static incrementId() {
     if (this.incrementId) {
@@ -24,15 +34,23 @@ export class CartManager {
            }
        } 
        //Agrega los productos por Id
-   async addToCartById(id){
+   async addToCartById(id, quantity, idCart){
     //conversion 
      const prodsJSON =  await fs.readFile(this.path, 'utf-8')
-     console.log(prodsJSON);
      const prods = JSON.parse(prodsJSON);
      //console.log(prods);
-     const product = prods.find(p => p.id == id);
-     if (!product) {
-      console.error(`Product id not found ${id}`);
+     const cart = cart.find(cart => cart.id === parseInt(idCart));
+     if (cart.quantity.some(product => product.id === parseInt(id))) {
+      if (carrito.cantidad.some(product => product.id === parseInt(id))) {
+        // Si el producto ya existe, actualizar la cantidad
+        const productIndex = carrito.cantidad.findIndex(product => product.id === parseInt(id))
+        carrito.cantidad[productIndex].quantity += quantity
+    } else {
+        // si el producto no existe, crear un nuevo objeto y añadirlo al carrito
+        const newProduct = { id: parseInt(id), quantity: quantity }
+        carrito.cantidad.push(newProduct)
+    }
+    
       }else{
       return product;
       }
